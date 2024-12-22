@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
-import { login } from '../store/slices/authSlice';
+import { register } from '../store/slices/authSlice';
 import {
   Box,
   Button,
@@ -13,17 +13,31 @@ import {
   Paper,
 } from '@mui/material';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { error, isLoading } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setPasswordError('');
+
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 8) {
+      setPasswordError('Password must be at least 8 characters long');
+      return;
+    }
+
     try {
-      await dispatch(login({ email, password })).unwrap();
+      await dispatch(register({ email, password })).unwrap();
       navigate('/');
     } catch (err) {
       // Error is handled by the auth slice
@@ -42,7 +56,7 @@ const Login: React.FC = () => {
       >
         <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
           <Typography component="h1" variant="h5" align="center" gutterBottom>
-            Login
+            Register
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
@@ -66,13 +80,23 @@ const Login: React.FC = () => {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            {error && (
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              id="confirmPassword"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {(error || passwordError) && (
               <Alert severity="error" sx={{ mt: 2 }}>
-                {error}
+                {passwordError || error}
               </Alert>
             )}
             <Button
@@ -82,12 +106,12 @@ const Login: React.FC = () => {
               sx={{ mt: 3, mb: 2 }}
               disabled={isLoading}
             >
-              {isLoading ? 'Logging in...' : 'Log In'}
+              {isLoading ? 'Registering...' : 'Register'}
             </Button>
             <Box sx={{ textAlign: 'center' }}>
-              <Link to="/register" style={{ textDecoration: 'none' }}>
+              <Link to="/login" style={{ textDecoration: 'none' }}>
                 <Typography variant="body2" color="primary">
-                  Don't have an account? Register here
+                  Already have an account? Log in here
                 </Typography>
               </Link>
             </Box>
@@ -98,4 +122,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;

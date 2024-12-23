@@ -21,8 +21,8 @@
     "@types/react-redux": "^7.1.34",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.9",
-    "ajv": "8.13.0", // Example - replace with a compatible version
-    "ajv-keywords": "3.5.1", // Example - replace with a compatible version
+    "ajv": "8.13.0", 
+    "ajv-keywords": "3.5.1", 
     "date-fns": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

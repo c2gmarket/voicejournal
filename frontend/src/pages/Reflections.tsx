@@ -13,16 +13,15 @@ import {
   IconButton,
   TextField,
   Typography,
-  CircularProgress,
   Chip,
+  Alert,
 } from '@mui/material';
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Mic as MicIcon,
-  Stop as StopIcon,
 } from '@mui/icons-material';
+import { AudioRecorder } from '../components/AudioRecorder';
 
 interface Reflection {
   id: number;
@@ -35,9 +34,9 @@ interface Reflection {
 const Reflections: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedReflection, setSelectedReflection] = useState<Reflection | null>(null);
-  const [isRecording, setIsRecording] = useState(false);
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogAction, setDialogAction] = useState<'create' | 'edit'>('create');
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   // TODO: Replace with actual data from Redux store
   const mockReflections: Reflection[] = [
@@ -61,13 +60,32 @@ const Reflections: React.FC = () => {
     setDialogAction(action);
     setDialogTitle(action === 'create' ? 'Record New Reflection' : 'Edit Reflection');
     setSelectedReflection(reflection || null);
+    setUploadError(null);
     setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedReflection(null);
-    setIsRecording(false);
+    setUploadError(null);
+  };
+
+  const handleRecordingComplete = async (audioBlob: Blob) => {
+    try {
+      const formData = new FormData();
+      formData.append('audio_file', audioBlob, 'recording.webm');
+
+      // TODO: Replace with actual API call using Redux
+      console.log('Uploading audio file:', formData);
+      
+      // Simulated API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      handleCloseDialog();
+    } catch (error) {
+      setUploadError('Failed to upload recording. Please try again.');
+      console.error('Error uploading recording:', error);
+    }
   };
 
   const handleSaveReflection = () => {
@@ -78,11 +96,6 @@ const Reflections: React.FC = () => {
   const handleDeleteReflection = (reflectionId: number) => {
     // TODO: Implement delete logic with Redux
     console.log('Delete reflection:', reflectionId);
-  };
-
-  const toggleRecording = () => {
-    // TODO: Implement actual audio recording logic
-    setIsRecording(!isRecording);
   };
 
   return (
@@ -162,22 +175,17 @@ const Reflections: React.FC = () => {
           <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogContent>
             <Box sx={{ mt: 2 }}>
+              {uploadError && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {uploadError}
+                </Alert>
+              )}
+
               {dialogAction === 'create' ? (
-                <Box sx={{ textAlign: 'center', py: 3 }}>
-                  <IconButton
-                    color={isRecording ? 'error' : 'primary'}
-                    onClick={toggleRecording}
-                    sx={{ width: 80, height: 80 }}
-                  >
-                    {isRecording ? <StopIcon /> : <MicIcon />}
-                  </IconButton>
-                  {isRecording && (
-                    <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <CircularProgress size={20} sx={{ mr: 1 }} />
-                      <Typography>Recording...</Typography>
-                    </Box>
-                  )}
-                </Box>
+                <AudioRecorder
+                  onRecordingComplete={handleRecordingComplete}
+                  maxDuration={300} // 5 minutes
+                />
               ) : (
                 <TextField
                   fullWidth
@@ -192,13 +200,11 @@ const Reflections: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button
-              onClick={handleSaveReflection}
-              variant="contained"
-              disabled={dialogAction === 'create' && !isRecording}
-            >
-              Save
-            </Button>
+            {dialogAction === 'edit' && (
+              <Button onClick={handleSaveReflection} variant="contained">
+                Save
+              </Button>
+            )}
           </DialogActions>
         </Dialog>
       </Box>

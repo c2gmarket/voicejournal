@@ -9,27 +9,23 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "latest",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.2.1",
     "@mui/material": "^6.2.1",
     "@mui/x-date-pickers": "latest",
     "@reduxjs/toolkit": "^2.5.0",
-    "@types/node": "^22.10.2",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@types/react-redux": "^7.1.34",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.9",
-    "ajv": "8.13.0",
-    "ajv-keywords": "3.5.1",
     "date-fns": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.0",
-    "react-scripts": "^5.0.1",
-    "typescript": "^5.7.2"
+    "react-scripts": "^3.0.1",
+    "typescript": "^4.9.5"
   }
 }

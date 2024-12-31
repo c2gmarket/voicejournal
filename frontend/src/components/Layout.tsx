@@ -59,17 +59,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <List>
         {menuItems.map((item) => (
           <ListItem
-            component="a"
-            href={item.path}
             key={item.text}
+            disablePadding
+            onClick={() => navigate(item.path)}
             selected={location.pathname === item.path}
-            sx={{ textDecoration: 'none', color: 'inherit' }}
+            sx={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
           >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.text} />
           </ListItem>
         ))}
-        <ListItem button onClick={handleLogout}>
+        <ListItem
+          disablePadding
+          onClick={handleLogout}
+          sx={{ cursor: 'pointer' }}
+        >
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>

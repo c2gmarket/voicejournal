@@ -37,7 +37,7 @@ const theme = createTheme({
 
 const PrivateRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  return isAuthenticated ? element : <Navigate to="/login" replace />;
 };
 
 const App: React.FC = () => {
@@ -50,11 +50,11 @@ const App: React.FC = () => {
         <Routes>
           <Route
             path="/login"
-            element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+            element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
           />
           <Route
             path="/register"
-            element={isAuthenticated ? <Navigate to="/" /> : <Register />}
+            element={isAuthenticated ? <Navigate to="/" replace /> : <Register />}
           />
           <Route path="/" element={<PrivateRoute element={<Dashboard />} />} />
           <Route path="/goals" element={<PrivateRoute element={<Goals />} />} />

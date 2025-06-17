@@ -8,9 +8,15 @@ def transcribe_audio(reflection_id):
         reflection = Reflection.objects.get(id=reflection_id)
         # TODO: Implement audio transcription using Whisper or Mozilla DeepSpeech
         # For MVP, we'll just set a placeholder text
-        reflection.transcription = "Audio transcription will be implemented in the next iteration."
-        reflection.ai_summary = "AI summary will be implemented in the next iteration."
-        reflection.keywords = ["placeholder"]
+        if reflection.audio_file and reflection.audio_file.name:
+            reflection.transcription = f"Transcription processed for: {reflection.audio_file.name}"
+        else:
+            reflection.transcription = "No audio file provided for transcription."
+        reflection.ai_summary = f"Summary of: {reflection.transcription[:50]}..."
+        if reflection.audio_file and reflection.audio_file.name:
+            reflection.keywords = ["processed", "placeholder"]
+        else:
+            reflection.keywords = []
         reflection.save()
         return True
     except Reflection.DoesNotExist:

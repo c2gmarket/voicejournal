@@ -76,6 +76,16 @@ reflection-app/
    npm start
    ```
 
+## Running with Docker
+
+To run the application using Docker Compose, navigate to the root of the project and run the following command:
+
+```bash
+docker-compose up --build
+```
+
+This will build the Docker images for the frontend, backend, database (PostgreSQL), and Redis services, and then start all the containers. The application will be accessible at the configured ports (e.g., frontend at `http://localhost:3000` and backend at `http://localhost:8000`).
+
 ## API Endpoints
 
 ### Authentication
